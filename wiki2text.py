@@ -1,16 +1,16 @@
 import wikipedia
 import docx
 from tqdm import tqdm
+import argparse
 
-
-def wiki2text(domainTXTFile):
+def wiki2text(domainTXTFile, location):
     # Read the text file to find to content
     with open(domainTXTFile, 'r') as file:
         file_contents = [line.strip() for line in file]
 
     # Loop the file content for wikipedia title
     for idx,name in tqdm(enumerate(file_contents), total=len(file_contents)):
-        page_title = name + " in Malaysia"
+        page_title = f"{name} in {location}"
         titleName = "Title.txt"
         urlName = "urlLink.txt"
         # try exception error to prevent error occur
@@ -30,10 +30,6 @@ def wiki2text(domainTXTFile):
             print(f"\nError occur!!! : {page.title}")
     
     return titleName,urlName
-
-
-
-
 
 def convert2doc(title,link):
     #-------------------------------------------------------
@@ -63,15 +59,22 @@ def convert2doc(title,link):
 
         cell2 = table.cell(idx,2)
         cell2.text = d2
+    # Save Word document
+    doc.save('output2.docx')
 
 
 if __name__ == '__main__':
-    domainFile = "sector_malaysia.txt"
-    titleTxtFile,urlTxtFile = wiki2text(domainTXTFile=domainFile)
-    print()
-    print()
-    convert2doc(title=titleTxtFile, link=urlTxtFile)
-    print("Done")
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--txt", help="text file for find the information in a list")
+    parser.add_argument("--loc", help="location to find")
+    args = parser.parse_args()
+    if args.txt.endswith(".txt"):
+        titleTxtFile,urlTxtFile = wiki2text(domainTXTFile=args.txt,location=args.loc)
+        convert2doc(title=titleTxtFile, link=urlTxtFile)
+        print("Done")
+    else:
+        print("It's not a text file")
     
 
 
