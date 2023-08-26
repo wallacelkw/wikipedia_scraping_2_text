@@ -14,7 +14,7 @@ of the title and url link
 
 
 ```ruby
-Example run the code
+# Example run the code
 python wiki2text.py --txt sector_singapore.txt --loc singapore
 ```
 
